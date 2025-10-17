@@ -32,7 +32,10 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
@@ -43,15 +46,11 @@ import com.qualcomm.robotcore.util.Range;
  * of the FTC Driver Station. When a selection is made from the menu, the corresponding OpMode
  * class is instantiated on the Robot Controller and executed.
  *
- * This particular OpMode just executes a basic Tank Drive Teleop for a two wheeled robot
- * It includes all the skeletal structure that all linear OpModes contain.
- *
  * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list
  */
 
 @TeleOp(name="Basic: Linear OpMode", group="Linear OpMode")
-@Disabled
 public class MecanumDrive extends LinearOpMode {
 
     // Declare OpMode members.
@@ -60,6 +59,12 @@ public class MecanumDrive extends LinearOpMode {
     private DcMotor leftFrontDrive = null;
     private DcMotor rightRearDrive = null;
     private DcMotor rightFrontDrive = null;
+
+    private CRServo Intake = null;
+
+    private DcMotor Launcher = null;
+    private Servo Lift = null;
+
 
     // test comment
 
@@ -76,6 +81,9 @@ public class MecanumDrive extends LinearOpMode {
         rightFrontDrive = hardwareMap.get(DcMotor.class, "right_front_drive");
         leftRearDrive = hardwareMap.get(DcMotor.class, "left_rear_drive");
         rightRearDrive = hardwareMap.get(DcMotor.class, "right_rear_drive");
+        Launcher = hardwareMap.get(DcMotor.class, "launcher");
+        Intake = hardwareMap.get(CRServo.class, "intake");
+        Lift = hardwareMap.get(Servo.class, "lift");
 
         // To drive forward, most robots need the motor on one side to be reversed, because the axles point in opposite directions.
         // Pushing the left stick forward MUST make robot go forward. So adjust these two lines based on your first test drive.
@@ -94,23 +102,51 @@ public class MecanumDrive extends LinearOpMode {
             double forward = -gamepad1.left_stick_y;
             double strafe = gamepad1.left_stick_x;
             double rotation = gamepad1.right_stick_x;
+            double launchPower = gamepad2.right_stick_y;
+            boolean intake = gamepad2.dpad_left;
+            boolean spit_out = gamepad2.dpad_right;
+            boolean lift = gamepad2.dpad_up;
+            boolean lower = gamepad2.dpad_down;
 
             // Setup a variable for each drive wheel to save power level for telemetry
             double leftFrontPower;
             double leftRearPower;
             double rightFrontPower;
             double rightRearPower;
+            double launcher;
+
 
             leftFrontPower = Range.clip(forward + rotation + strafe, -1.0, 1.0);
-            rightFrontPower   = Range.clip(forward - rotation - strafe, -1.0, 1.0);
+            rightFrontPower = Range.clip(forward - rotation - strafe, -1.0, 1.0);
             leftRearPower = Range.clip(forward + rotation - strafe, -1.0, 1.0);
             rightRearPower = Range.clip(forward - rotation + strafe, -1.0, 1.0);
-
+            launcher = Range.clip(-launchPower, 0, 1);
             // Send calculated power to wheels
             leftFrontDrive.setPower(leftFrontPower);
             rightFrontDrive.setPower(rightFrontPower);
             leftRearDrive.setPower(leftRearPower);
             rightRearDrive.setPower(rightRearPower);
+            Launcher.setPower(launchPower);
+            if (intake) {
+                Intake.setPower(-0.5);
+            }
+            else if(spit_out){
+                Intake.setPower(0.5);
+
+            }
+            else{
+                Intake.setPower(0);
+            }
+            if (lift) {
+                Lift.setPosition(1);
+            }
+            else if (lower) {
+                Lift.setPosition(0);
+            }
+            else{
+                Lift.setPosition(0);
+            }
+
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
