@@ -115,8 +115,8 @@ public class MecanumDrive extends LinearOpMode {
 
             leftFrontPower = Range.clip(forward + rotation + strafe, -1.0, 1.0);
             rightFrontPower = Range.clip(forward - rotation - strafe, -1.0, 1.0);
-            leftRearPower = Range.clip(forward + rotation - strafe, -1.0, 1.0);
-            rightRearPower = Range.clip(forward - rotation + strafe, -1.0, 1.0);
+            leftRearPower = Range.clip(forward - rotation + strafe, -1.0, 1.0);
+            rightRearPower = Range.clip(forward + rotation - strafe, -1.0, 1.0);
             launcher = Range.clip(-launchPower, 0, 1);
             // Send calculated power to wheels
             leftFrontDrive.setPower(leftFrontPower);
