@@ -29,12 +29,9 @@
 
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
@@ -60,7 +57,7 @@ public class MecanumDrive extends LinearOpMode {
     private DcMotor rightRearDrive = null;
     private DcMotor rightFrontDrive = null;
 
-    private CRServo Intake = null;
+    private DcMotor Intake = null;
 
     private DcMotor Launcher = null;
     private Servo Lift = null;
@@ -77,12 +74,12 @@ public class MecanumDrive extends LinearOpMode {
         // Initialize the hardware variables. Note that the strings used here as parameters
         // to 'get' must correspond to the names assigned during the robot configuration
         // step (using the FTC Robot Controller app on the phone).
-        leftFrontDrive  = hardwareMap.get(DcMotor.class, "left_front_drive");
-        rightFrontDrive = hardwareMap.get(DcMotor.class, "right_front_drive");
-        leftRearDrive = hardwareMap.get(DcMotor.class, "left_rear_drive");
-        rightRearDrive = hardwareMap.get(DcMotor.class, "right_rear_drive");
+        leftFrontDrive  = hardwareMap.get(DcMotor.class, "leftFrontDrive");
+        rightFrontDrive = hardwareMap.get(DcMotor.class, "rightFrontDrive");
+        leftRearDrive = hardwareMap.get(DcMotor.class, "leftRearDrive");
+        rightRearDrive = hardwareMap.get(DcMotor.class, "rightRearDrive");
         Launcher = hardwareMap.get(DcMotor.class, "launcher");
-        Intake = hardwareMap.get(CRServo.class, "intake");
+        Intake = hardwareMap.get(DcMotor.class, "intake");
         Lift = hardwareMap.get(Servo.class, "lift");
 
         // To drive forward, most robots need the motor on one side to be reversed, because the axles point in opposite directions.
@@ -99,7 +96,7 @@ public class MecanumDrive extends LinearOpMode {
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
-            double forward = -gamepad1.left_stick_y;
+            double forward = gamepad1.left_stick_y;
             double strafe = gamepad1.left_stick_x;
             double rotation = gamepad1.right_stick_x;
             double launchPower = gamepad2.right_stick_y;
@@ -138,13 +135,10 @@ public class MecanumDrive extends LinearOpMode {
                 Intake.setPower(0);
             }
             if (lift) {
-                Lift.setPosition(1);
-            }
-            else if (lower) {
                 Lift.setPosition(0);
             }
             else{
-                Lift.setPosition(0);
+                Lift.setPosition(1);
             }
 
 
