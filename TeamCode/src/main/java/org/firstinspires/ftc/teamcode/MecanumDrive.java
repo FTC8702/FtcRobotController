@@ -97,8 +97,8 @@ public class MecanumDrive extends LinearOpMode {
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
             double forward = gamepad1.left_stick_y;
-            double strafe = gamepad1.left_stick_x;
-            double rotation = gamepad1.right_stick_x;
+            double strafe = gamepad1.right_stick_x;
+            double rotation = gamepad1.left_stick_x;
             double launchPower = gamepad2.right_stick_y;
             boolean intake = gamepad2.dpad_left;
             boolean spit_out = gamepad2.dpad_right;
