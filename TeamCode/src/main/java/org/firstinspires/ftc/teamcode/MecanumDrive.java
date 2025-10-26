@@ -99,7 +99,8 @@ public class MecanumDrive extends LinearOpMode {
             double forward = gamepad1.left_stick_y;
             double strafe = gamepad1.right_stick_x;
             double rotation = gamepad1.left_stick_x;
-            double launchPower = gamepad2.right_stick_y;
+            boolean launchPowerClose = gamepad2.a;
+            boolean launchPowerFar = gamepad2.y;
             boolean intake = gamepad2.dpad_left;
             boolean spit_out = gamepad2.dpad_right;
             boolean lift = gamepad2.dpad_up;
@@ -110,20 +111,30 @@ public class MecanumDrive extends LinearOpMode {
             double leftRearPower;
             double rightFrontPower;
             double rightRearPower;
-            double launcher;
+
 
 
             leftFrontPower = Range.clip(forward + rotation + strafe, -1.0, 1.0);
             rightFrontPower = Range.clip(forward - rotation - strafe, -1.0, 1.0);
             leftRearPower = Range.clip(forward - rotation + strafe, -1.0, 1.0);
             rightRearPower = Range.clip(forward + rotation - strafe, -1.0, 1.0);
-            launcher = Range.clip(-launchPower, 0, 1);
             // Send calculated power to wheels
             leftFrontDrive.setPower(leftFrontPower);
             rightFrontDrive.setPower(rightFrontPower);
             leftRearDrive.setPower(leftRearPower);
             rightRearDrive.setPower(rightRearPower);
-            Launcher.setPower(launchPower);
+            if (launchPowerClose) {
+                Launcher.setPower(-0.6);
+            }
+            else {
+                Launcher.setPower(0);
+            }
+            if (launchPowerFar) {
+                Launcher.setPower(-0.9);
+            }
+            else {
+                Launcher.setPower(0);
+            }
             if (intake) {
                 Intake.setPower(-0.5);
             }
