@@ -32,6 +32,8 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
@@ -59,7 +61,7 @@ public class MecanumDrive extends LinearOpMode {
 
     private DcMotor Intake = null;
 
-    private DcMotor Launcher = null;
+    private DcMotorEx Launcher = null;
     private Servo Lift = null;
 
 
@@ -78,7 +80,7 @@ public class MecanumDrive extends LinearOpMode {
         rightFrontDrive = hardwareMap.get(DcMotor.class, "rightFrontDrive");
         leftRearDrive = hardwareMap.get(DcMotor.class, "leftRearDrive");
         rightRearDrive = hardwareMap.get(DcMotor.class, "rightRearDrive");
-        Launcher = hardwareMap.get(DcMotor.class, "launcher");
+        Launcher = hardwareMap.get(DcMotorEx.class, "launcher");
         Intake = hardwareMap.get(DcMotor.class, "intake");
         Lift = hardwareMap.get(Servo.class, "lift");
 
@@ -89,6 +91,7 @@ public class MecanumDrive extends LinearOpMode {
         leftRearDrive.setDirection(DcMotor.Direction.REVERSE);
         rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
         rightRearDrive.setDirection(DcMotor.Direction.FORWARD);
+        Launcher.setDirection(DcMotorSimple.Direction.REVERSE);
 
         // Wait for the game to start (driver presses START)
         waitForStart();
@@ -124,13 +127,13 @@ public class MecanumDrive extends LinearOpMode {
             leftRearDrive.setPower(leftRearPower);
             rightRearDrive.setPower(rightRearPower);
             if (launchPowerClose) {
-                Launcher.setPower(-0.6);
+                Launcher.setPower(0.6);
             }
             else {
                 Launcher.setPower(0);
             }
             if (launchPowerFar) {
-                Launcher.setPower(-0.9);
+                Launcher.setPower(0.9);
             }
             else {
                 Launcher.setPower(0);
