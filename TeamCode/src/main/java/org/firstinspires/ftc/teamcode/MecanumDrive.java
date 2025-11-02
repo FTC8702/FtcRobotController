@@ -104,6 +104,8 @@ public class MecanumDrive extends LinearOpMode {
             double rotation = gamepad1.left_stick_x;
             boolean launchPowerClose = gamepad2.a;
             boolean launchPowerFar = gamepad2.y;
+            boolean launchPowerSuperClose = gamepad2.b;
+            boolean launchPowerOff = gamepad2.x;
             boolean intake = gamepad2.dpad_left;
             boolean spit_out = gamepad2.dpad_right;
             boolean lift = gamepad2.dpad_up;
@@ -131,6 +133,13 @@ public class MecanumDrive extends LinearOpMode {
             }
 
             if (launchPowerFar) {
+                Launcher.setVelocity(2500);
+            }
+
+            if (launchPowerSuperClose) {
+                Launcher.setVelocity(1500);
+            }
+            if (launchPowerOff) {
                 Launcher.setVelocity(0);
             }
 
