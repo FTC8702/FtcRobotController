@@ -129,15 +129,15 @@ public class MecanumDrive extends LinearOpMode {
             leftRearDrive.setPower(leftRearPower);
             rightRearDrive.setPower(rightRearPower);
             if (launchPowerClose) {
-                Launcher.setVelocity(2000);
+                Launcher.setVelocity(1000);
             }
 
             if (launchPowerFar) {
-                Launcher.setVelocity(2500);
+                Launcher.setVelocity(1500);
             }
 
             if (launchPowerSuperClose) {
-                Launcher.setVelocity(1500);
+                Launcher.setVelocity(500);
             }
             if (launchPowerOff) {
                 Launcher.setVelocity(0);
