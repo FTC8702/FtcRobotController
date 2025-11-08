@@ -37,7 +37,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
-
+import org.firstinspires.ftc.teamcode.PinPoint_Execution;
 
 /*
  * This file contains an minimal example of a Linear "OpMode". An OpMode is a 'program' that runs in either
@@ -64,7 +64,7 @@ public class MecanumDrive extends LinearOpMode {
     private DcMotorEx Launcher = null;
     private Servo Lift = null;
 
-
+    private PinPoint_Execution odometry = null;
     // test comment
 
     @Override
@@ -129,7 +129,7 @@ public class MecanumDrive extends LinearOpMode {
             leftRearDrive.setPower(leftRearPower);
             rightRearDrive.setPower(rightRearPower);
             if (launchPowerClose) {
-                Launcher.setVelocity(1000);
+                Launcher.setVelocity(690);
             }
 
             if (launchPowerFar) {
@@ -137,7 +137,7 @@ public class MecanumDrive extends LinearOpMode {
             }
 
             if (launchPowerSuperClose) {
-                Launcher.setVelocity(500);
+                Launcher.setVelocity(250);
             }
             if (launchPowerOff) {
                 Launcher.setVelocity(0);
