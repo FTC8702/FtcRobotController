@@ -15,7 +15,7 @@ public class Camera_Code {
         @Override
         public void init() {
             limelight3A = hardwareMap.get(Limelight3A.class, "limelight");
-            limelight3A.pipelineSwitch(1); // april tag 12 pipline
+            limelight3A.pipelineSwitch(8); // april tag 12 pipline
         }
 
         @Override
