@@ -19,9 +19,15 @@ public class PinPoint_Execution {
     double lastYError = 0;
 
     // Constructor
-    public PinPoint_Execution(GoBildaPinpointDriver odo){
+    public PinPoint_Execution(GoBildaPinpointDriver odo) {
         this.odo = odo;
+        odo.setOffsets(-100, 0, DistanceUnit.MM);
+        odo.setEncoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD);
+        odo.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.REVERSED, GoBildaPinpointDriver.EncoderDirection.FORWARD);
+        odo.resetPosAndIMU();
     }
+
+
     public List<Double> move(double x, double y, double z) {
         odo.setOffsets(-100, 0, DistanceUnit.MM);
         odo.setEncoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD);
