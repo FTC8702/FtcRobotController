@@ -7,6 +7,8 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
+import org.firstinspires.ftc.teamcode.GoBildaPinpointDriver;
+
 @Autonomous(name="Auto", group="Linear OpMode")
 public abstract class autonanouse extends LinearOpMode {
 private DcMotor leftRearDrive = null;
@@ -16,6 +18,9 @@ private DcMotor rightFrontDrive = null;
 private DcMotor Launcher = null;
 private DcMotor Intake = null;
 private Servo Lift = null;
+private CRServo Loader = null;
+
+private GoBildaPinpointDriver pinPoint = null;
 public void runOpMode() {
     leftFrontDrive = hardwareMap.get(DcMotor.class, "leftFrontDrive");
     rightFrontDrive = hardwareMap.get(DcMotor.class, "rightFrontDrive");
@@ -24,6 +29,8 @@ public void runOpMode() {
     Launcher = hardwareMap.get(DcMotor.class, "launcher");
     Intake = hardwareMap.get(DcMotor.class, "intake");
     Lift = hardwareMap.get(Servo.class, "lift");
+    Loader = hardwareMap.get(CRServo.class, "loader");
+    pinPoint = hardwareMap.get(GoBildaPinpointDriver.class, "pinPoint");
 
     leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
     leftRearDrive.setDirection(DcMotor.Direction.REVERSE);

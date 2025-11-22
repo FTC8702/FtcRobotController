@@ -31,6 +31,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -63,7 +64,7 @@ public class MecanumDrive extends LinearOpMode {
 
     private DcMotorEx Launcher = null;
     private Servo Lift = null;
-
+    private CRServo Loader = null;
     private PinPoint_Execution odometry = null;
     // test comment
 
@@ -83,6 +84,7 @@ public class MecanumDrive extends LinearOpMode {
         Launcher = hardwareMap.get(DcMotorEx.class, "launcher");
         Intake = hardwareMap.get(DcMotor.class, "intake");
         Lift = hardwareMap.get(Servo.class, "lift");
+        Loader = hardwareMap.get(CRServo.class, "loader");
 
         // To drive forward, most robots need the motor on one side to be reversed, because the axles point in opposite directions.
         // Pushing the left stick forward MUST make robot go forward. So adjust these two lines based on your first test drive.
@@ -109,7 +111,7 @@ public class MecanumDrive extends LinearOpMode {
             boolean intake = gamepad2.dpad_left;
             boolean spit_out = gamepad2.dpad_right;
             boolean lift = gamepad2.dpad_up;
-            boolean lower = gamepad2.dpad_down;
+            boolean load = gamepad2.dpad_down;
 
             // Setup a variable for each drive wheel to save power level for telemetry
             double leftFrontPower;
@@ -158,6 +160,12 @@ public class MecanumDrive extends LinearOpMode {
             }
             else{
                 Lift.setPosition(1);
+            }
+            if(load){
+                Loader.setPower(1);
+            }
+            else{
+                Loader.setPower(0);
             }
 
 
