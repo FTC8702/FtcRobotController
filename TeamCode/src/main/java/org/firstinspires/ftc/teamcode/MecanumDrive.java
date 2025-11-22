@@ -50,7 +50,7 @@ import org.firstinspires.ftc.teamcode.PinPoint_Execution;
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Basic: Linear OpMode", group="Linear OpMode")
+@TeleOp(name="TELEOP THING PLEASE CLICK", group="TeleOp")
 public class MecanumDrive extends LinearOpMode {
 
     // Declare OpMode members.
@@ -102,8 +102,8 @@ public class MecanumDrive extends LinearOpMode {
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
             double forward = gamepad1.left_stick_y;
-            double strafe = gamepad1.right_stick_x;
-            double rotation = gamepad1.left_stick_x;
+            double strafe = gamepad1.left_stick_x;
+            double rotation = gamepad1.right_stick_x;
             boolean launchPowerClose = gamepad2.a;
             boolean launchPowerFar = gamepad2.y;
             boolean launchPowerSuperClose = gamepad2.b;
@@ -111,7 +111,7 @@ public class MecanumDrive extends LinearOpMode {
             boolean intake = gamepad2.dpad_left;
             boolean spit_out = gamepad2.dpad_right;
             boolean lift = gamepad2.dpad_up;
-            boolean load = gamepad2.dpad_down;
+            boolean load = gamepad2.left_bumper;
 
             // Setup a variable for each drive wheel to save power level for telemetry
             double leftFrontPower;
@@ -121,9 +121,9 @@ public class MecanumDrive extends LinearOpMode {
 
 
 
-            leftFrontPower = Range.clip(forward + rotation + strafe, -1.0, 1.0);
-            rightFrontPower = Range.clip(forward - rotation - strafe, -1.0, 1.0);
-            leftRearPower = Range.clip(forward - rotation + strafe, -1.0, 1.0);
+            leftFrontPower = Range.clip(-forward + rotation + strafe, -1.0, 1.0);
+            rightFrontPower = Range.clip(forward + rotation + strafe, -1.0, 1.0);
+            leftRearPower = Range.clip(-forward + rotation - strafe, -1.0, 1.0);
             rightRearPower = Range.clip(forward + rotation - strafe, -1.0, 1.0);
             // Send calculated power to wheels
             leftFrontDrive.setPower(leftFrontPower);
