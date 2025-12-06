@@ -41,10 +41,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import org.firstinspires.ftc.robotcore.external.navigation.UnnormalizedAngleUnit;
 import org.firstinspires.ftc.robotcore.internal.opmode.OpModeMeta;
 import org.firstinspires.ftc.teamcode.MecanumDrive;
-import org.firstinspires.ftc.teamcode.OTOSLocalizer;
-import org.firstinspires.ftc.teamcode.PinpointLocalizer;
-import org.firstinspires.ftc.teamcode.TankDrive;
-import org.firstinspires.ftc.teamcode.ThreeDeadWheelLocalizer;
+import org.firstinspires.ftc.teamcode.MecanumDrive;
 import org.firstinspires.ftc.teamcode.TwoDeadWheelLocalizer;
 
 import java.util.ArrayList;
@@ -67,62 +64,6 @@ public final class TuningOpModes {
                 .setFlavor(OpModeMeta.Flavor.TELEOP)
                 .build();
     }
-
-    private static PinpointView makePinpointView(PinpointLocalizer pl) {
-        return new PinpointView() {
-            GoBildaPinpointDriver.EncoderDirection parDirection = pl.initialParDirection;
-            GoBildaPinpointDriver.EncoderDirection perpDirection = pl.initialPerpDirection;
-
-            @Override
-            public void update() {
-                pl.driver.update();
-            }
-
-            @Override
-            public int getParEncoderPosition() {
-                return pl.driver.getEncoderX();
-            }
-
-            @Override
-            public int getPerpEncoderPosition() {
-                return pl.driver.getEncoderY();
-            }
-
-            @Override
-            public float getHeadingVelocity(UnnormalizedAngleUnit unit) {
-                return (float) pl.driver.getHeadingVelocity(unit);
-            }
-
-            @Override
-            public void setParDirection(@NonNull DcMotorSimple.Direction direction) {
-                parDirection = direction == DcMotorSimple.Direction.FORWARD ?
-                        GoBildaPinpointDriver.EncoderDirection.FORWARD :
-                        GoBildaPinpointDriver.EncoderDirection.REVERSED;
-                pl.driver.setEncoderDirections(parDirection, perpDirection);
-            }
-
-            @Override
-            public DcMotorSimple.Direction getParDirection() {
-                return parDirection == GoBildaPinpointDriver.EncoderDirection.FORWARD ?
-                        DcMotorSimple.Direction.FORWARD : DcMotorSimple.Direction.REVERSE;
-            }
-
-            @Override
-            public void setPerpDirection(@NonNull DcMotorSimple.Direction direction) {
-                perpDirection = direction == DcMotorSimple.Direction.FORWARD ?
-                        GoBildaPinpointDriver.EncoderDirection.FORWARD :
-                        GoBildaPinpointDriver.EncoderDirection.REVERSED;
-                pl.driver.setEncoderDirections(parDirection, perpDirection);
-            }
-
-            @Override
-            public DcMotorSimple.Direction getPerpDirection() {
-                return perpDirection == GoBildaPinpointDriver.EncoderDirection.FORWARD ?
-                        DcMotorSimple.Direction.FORWARD : DcMotorSimple.Direction.REVERSE;
-            }
-        };
-    }
-
     @OpModeRegistrar
     public static void register(OpModeManager manager) {
         if (DISABLED) return;
@@ -146,16 +87,7 @@ public final class TuningOpModes {
                     leftEncs.add(new EncoderRef(0, 1));
                     rightEncs.add(new EncoderRef(0, 2));
                     rightEncs.add(new EncoderRef(0, 3));
-                } else if (md.localizer instanceof ThreeDeadWheelLocalizer) {
-                    ThreeDeadWheelLocalizer dl = (ThreeDeadWheelLocalizer) md.localizer;
-                    encoderGroups.add(new LynxQuadratureEncoderGroup(
-                            hardwareMap.getAll(LynxModule.class),
-                            Arrays.asList(dl.par0, dl.par1, dl.perp)
-                    ));
-                    parEncs.add(new EncoderRef(0, 0));
-                    parEncs.add(new EncoderRef(0, 1));
-                    perpEncs.add(new EncoderRef(0, 2));
-                } else if (md.localizer instanceof TwoDeadWheelLocalizer) {
+                }  else if (md.localizer instanceof TwoDeadWheelLocalizer) {
                     TwoDeadWheelLocalizer dl = (TwoDeadWheelLocalizer) md.localizer;
                     encoderGroups.add(new LynxQuadratureEncoderGroup(
                             hardwareMap.getAll(LynxModule.class),
@@ -163,19 +95,7 @@ public final class TuningOpModes {
                     ));
                     parEncs.add(new EncoderRef(0, 0));
                     perpEncs.add(new EncoderRef(0, 1));
-                } else if (md.localizer instanceof OTOSLocalizer) {
-                    OTOSLocalizer ol = (OTOSLocalizer) md.localizer;
-                    encoderGroups.add(new OTOSEncoderGroup(ol.otos));
-                    parEncs.add(new EncoderRef(0, 0));
-                    perpEncs.add(new EncoderRef(0, 1));
-                    lazyImu = new OTOSIMU(ol.otos);
-                }  else if (md.localizer instanceof PinpointLocalizer) {
-                    PinpointView pv = makePinpointView((PinpointLocalizer) md.localizer);
-                    encoderGroups.add(new PinpointEncoderGroup(pv));
-                    parEncs.add(new EncoderRef(0, 0));
-                    perpEncs.add(new EncoderRef(0, 1));
-                    lazyImu = new PinpointIMU(pv);
-                } else {
+                }  else {
                     throw new RuntimeException("unknown localizer: " + md.localizer.getClass().getName());
                 }
 
@@ -203,83 +123,6 @@ public final class TuningOpModes {
                         () -> new MotorFeedforward(MecanumDrive.PARAMS.kS,
                                 MecanumDrive.PARAMS.kV / MecanumDrive.PARAMS.inPerTick,
                                 MecanumDrive.PARAMS.kA / MecanumDrive.PARAMS.inPerTick),
-                        0
-                );
-            };
-        } else if (DRIVE_CLASS.equals(TankDrive.class)) {
-            dvf = hardwareMap -> {
-                TankDrive td = new TankDrive(hardwareMap, new Pose2d(0, 0, 0));
-                LazyImu lazyImu = td.lazyImu;
-
-                List<EncoderGroup> encoderGroups = new ArrayList<>();
-                List<EncoderRef> leftEncs = new ArrayList<>(), rightEncs = new ArrayList<>();
-                List<EncoderRef> parEncs = new ArrayList<>(), perpEncs = new ArrayList<>();
-                if (td.localizer instanceof TankDrive.DriveLocalizer) {
-                    TankDrive.DriveLocalizer dl = (TankDrive.DriveLocalizer) td.localizer;
-                    List<Encoder> allEncoders = new ArrayList<>();
-                    allEncoders.addAll(dl.leftEncs);
-                    allEncoders.addAll(dl.rightEncs);
-                    encoderGroups.add(new LynxQuadratureEncoderGroup(
-                            hardwareMap.getAll(LynxModule.class),
-                            allEncoders
-                    ));
-                    for (int i = 0; i < dl.leftEncs.size(); i++) {
-                        leftEncs.add(new EncoderRef(0, i));
-                    }
-                    for (int i = 0; i < dl.rightEncs.size(); i++) {
-                        rightEncs.add(new EncoderRef(0, dl.leftEncs.size() + i));
-                    }
-                } else if (td.localizer instanceof ThreeDeadWheelLocalizer) {
-                    ThreeDeadWheelLocalizer dl = (ThreeDeadWheelLocalizer) td.localizer;
-                    encoderGroups.add(new LynxQuadratureEncoderGroup(
-                            hardwareMap.getAll(LynxModule.class),
-                            Arrays.asList(dl.par0, dl.par1, dl.perp)
-                    ));
-                    parEncs.add(new EncoderRef(0, 0));
-                    parEncs.add(new EncoderRef(0, 1));
-                    perpEncs.add(new EncoderRef(0, 2));
-                } else if (td.localizer instanceof TwoDeadWheelLocalizer) {
-                    TwoDeadWheelLocalizer dl = (TwoDeadWheelLocalizer) td.localizer;
-                    encoderGroups.add(new LynxQuadratureEncoderGroup(
-                            hardwareMap.getAll(LynxModule.class),
-                            Arrays.asList(dl.par, dl.perp)
-                    ));
-                    parEncs.add(new EncoderRef(0, 0));
-                    perpEncs.add(new EncoderRef(0, 1));
-                }  else if (td.localizer instanceof PinpointLocalizer) {
-                    PinpointView pv = makePinpointView((PinpointLocalizer) td.localizer);
-                    encoderGroups.add(new PinpointEncoderGroup(pv));
-                    parEncs.add(new EncoderRef(0, 0));
-                    perpEncs.add(new EncoderRef(0, 1));
-                    lazyImu = new PinpointIMU(pv);
-                } else if (td.localizer instanceof OTOSLocalizer) {
-                    OTOSLocalizer ol = (OTOSLocalizer) td.localizer;
-                    encoderGroups.add(new OTOSEncoderGroup(ol.otos));
-                    parEncs.add(new EncoderRef(0, 0));
-                    perpEncs.add(new EncoderRef(0, 1));
-                    lazyImu = new OTOSIMU(ol.otos);
-                } else {
-                    throw new RuntimeException("unknown localizer: " + td.localizer.getClass().getName());
-                }
-
-                return new DriveView(
-                        DriveType.TANK,
-                        TankDrive.PARAMS.inPerTick,
-                        TankDrive.PARAMS.maxWheelVel,
-                        TankDrive.PARAMS.minProfileAccel,
-                        TankDrive.PARAMS.maxProfileAccel,
-                        encoderGroups,
-                        td.leftMotors,
-                        td.rightMotors,
-                        leftEncs,
-                        rightEncs,
-                        parEncs,
-                        perpEncs,
-                        lazyImu,
-                        td.voltageSensor,
-                        () -> new MotorFeedforward(TankDrive.PARAMS.kS,
-                                TankDrive.PARAMS.kV / TankDrive.PARAMS.inPerTick,
-                                TankDrive.PARAMS.kA / TankDrive.PARAMS.inPerTick),
                         0
                 );
             };
