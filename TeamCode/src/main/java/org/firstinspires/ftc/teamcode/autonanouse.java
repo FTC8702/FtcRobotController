@@ -1,6 +1,9 @@
 package org.firstinspires.ftc.teamcode;
 
 
+import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.Vector2d;
+import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -10,11 +13,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.teamcode.GoBildaPinpointDriver;
 
 @Autonomous(name="Auto", group="Linear OpMode")
-public abstract class autonanouse extends LinearOpMode {
-private DcMotor leftRearDrive = null;
-private DcMotor rightRearDrive = null;
-private DcMotor leftFrontDrive = null;
-private DcMotor rightFrontDrive = null;
+public class autonanouse extends LinearOpMode {
+private MecanumDrive mecanumDrive = null;
 private DcMotor Launcher = null;
 private DcMotor Intake = null;
 private Servo Lift = null;
@@ -22,38 +22,22 @@ private CRServo Loader = null;
 
 private GoBildaPinpointDriver pinPoint = null;
 public void runOpMode() {
-    leftFrontDrive = hardwareMap.get(DcMotor.class, "leftFrontDrive");
-    rightFrontDrive = hardwareMap.get(DcMotor.class, "rightFrontDrive");
-    leftRearDrive = hardwareMap.get(DcMotor.class, "leftRearDrive");
-    rightRearDrive = hardwareMap.get(DcMotor.class, "rightRearDrive");
     Launcher = hardwareMap.get(DcMotor.class, "launcher");
     Intake = hardwareMap.get(DcMotor.class, "intake");
     Lift = hardwareMap.get(Servo.class, "lift");
     Loader = hardwareMap.get(CRServo.class, "loader");
     pinPoint = hardwareMap.get(GoBildaPinpointDriver.class, "pinPoint");
+//sets the start cords and heading of the robot
+    Pose2d beginPose = new Pose2d(-48, 48, 225);
+    mecanumDrive = new MecanumDrive(hardwareMap, beginPose);
 
-    leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
-    leftRearDrive.setDirection(DcMotor.Direction.REVERSE);
-    rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
-    rightRearDrive.setDirection(DcMotor.Direction.FORWARD);
-
-    leftRearDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-    leftFrontDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-    rightRearDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-    rightFrontDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
-    leftFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-    leftRearDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-    rightFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-    rightRearDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-    double leftFrontPower = 0;
-    double leftRearPower = 0;
-    double rightFrontPower = 0;
-    double rightRearPower = 0;
     waitForStart();
-    while (opModeIsActive()) {
-
-    }
+    Actions.runBlocking(
+            mecanumDrive.actionBuilder(beginPose)
+                    .strafeTo(new Vector2d(0, 0))
+                    //TO DO SHOOT
+                    .strafeToSplineHeading(new Vector2d(0,0), -90)
+                    .splineTo(new Vector2d(0, 60), Math.PI)
+                    .build());
 }
        }
