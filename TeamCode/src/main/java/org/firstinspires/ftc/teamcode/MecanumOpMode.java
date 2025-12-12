@@ -66,6 +66,8 @@ public class MecanumOpMode extends LinearOpMode {
     private Servo Lift = null;
     private CRServo Loader = null;
     private PinPoint_Execution odometry = null;
+    private DcMotor window_opener_1 = null;
+    private DcMotor window_opener_2 = null;
     // test comment
 
     @Override
@@ -85,7 +87,8 @@ public class MecanumOpMode extends LinearOpMode {
         Intake = hardwareMap.get(DcMotor.class, "intake");
         Lift = hardwareMap.get(Servo.class, "lift");
         Loader = hardwareMap.get(CRServo.class, "loader");
-
+        window_opener_1 = hardwareMap.get(DcMotor.class, "Window1");
+        window_opener_2 = hardwareMap.get(DcMotor.class, "Window2");
         // To drive forward, most robots need the motor on one side to be reversed, because the axles point in opposite directions.
         // Pushing the left stick forward MUST make robot go forward. So adjust these two lines based on your first test drive.
         // Note: The settings here assume direct drive on left and right wheels.  Gear Reduction or 90 Deg drives may require direction flips
@@ -112,6 +115,7 @@ public class MecanumOpMode extends LinearOpMode {
             boolean spit_out = gamepad2.dpad_right;
             boolean lift = gamepad2.dpad_up;
             boolean load = gamepad2.left_bumper;
+            boolean window = gamepad1.left_bumper;
 
             // Setup a variable for each drive wheel to save power level for telemetry
             double leftFrontPower;
@@ -130,6 +134,14 @@ public class MecanumOpMode extends LinearOpMode {
             rightFrontDrive.setPower(rightFrontPower);
             leftRearDrive.setPower(leftRearPower);
             rightRearDrive.setPower(rightRearPower);
+            if (window){
+                window_opener_1.setPower(1);
+                window_opener_2.setPower(1);
+            }
+            else{
+                window_opener_1.setPower(0);
+                window_opener_2.setPower(0);
+            }
             if (launchPowerClose) {
                 Launcher.setVelocity(-1250);
             }
