@@ -114,7 +114,6 @@ public class MecanumOpMode extends LinearOpMode {
             boolean intake = gamepad2.dpad_left;
             boolean spit_out = gamepad2.dpad_right;
             boolean lift = gamepad2.dpad_up;
-            boolean load = gamepad2.left_bumper;
             boolean window = gamepad1.left_bumper;
             boolean unwindow = gamepad1.right_bumper;
 
@@ -160,13 +159,15 @@ public class MecanumOpMode extends LinearOpMode {
 
             if (intake) {
                 Intake.setPower(-0.5);
+                Loader.setPower(1);
             }
             else if(spit_out){
                 Intake.setPower(0.5);
-
+                Loader.setPower(-1);
             }
             else{
                 Intake.setPower(0);
+                Loader.setPower(0);
             }
             if (lift) {
                 Lift.setPosition(0);
@@ -174,12 +175,7 @@ public class MecanumOpMode extends LinearOpMode {
             else{
                 Lift.setPosition(1);
             }
-            if(load){
-                Loader.setPower(1);
-            }
-            else{
-                Loader.setPower(0);
-            }
+
 
 
             // Show the elapsed game time and wheel power.
