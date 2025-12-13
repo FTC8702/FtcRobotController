@@ -159,11 +159,11 @@ public class MecanumOpMode extends LinearOpMode {
 
             if (intake) {
                 Intake.setPower(-0.5);
-                Loader.setPower(1);
+                Loader.setPower(-1);
             }
             else if(spit_out){
                 Intake.setPower(0.5);
-                Loader.setPower(-1);
+                Loader.setPower(1);
             }
             else{
                 Intake.setPower(0);

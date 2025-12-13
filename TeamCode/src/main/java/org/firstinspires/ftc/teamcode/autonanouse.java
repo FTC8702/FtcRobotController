@@ -14,6 +14,10 @@ import org.firstinspires.ftc.teamcode.GoBildaPinpointDriver;
 
 @Autonomous(name="Auto", group="Linear OpMode")
 public class autonanouse extends LinearOpMode {
+private DcMotor leftFrontDrive = null;
+private DcMotor leftRearDrive = null;
+private DcMotor rightRearDrive = null;
+private DcMotor rightfrontDrive = null;
 private MecanumDrive mecanumDrive = null;
 private DcMotor Launcher = null;
 private DcMotor Intake = null;
@@ -27,6 +31,10 @@ public void runOpMode() {
     Lift = hardwareMap.get(Servo.class, "lift");
     Loader = hardwareMap.get(CRServo.class, "loader");
     pinPoint = hardwareMap.get(GoBildaPinpointDriver.class, "pinPoint");
+    leftFrontDrive = hardwareMap.get(DcMotor.class, "left_front_drive");
+    leftRearDrive = hardwareMap.get(DcMotor.class, "left_rear_drive");
+    rightfrontDrive = hardwareMap.get(DcMotor.class, "right_front_drive");
+    rightRearDrive = hardwareMap.get(DcMotor.class, "right_rear_drive");
 //sets the start cords and heading of the robot
     Pose2d beginPose = new Pose2d(-48, 48, 225);
     mecanumDrive = new MecanumDrive(hardwareMap, beginPose);
